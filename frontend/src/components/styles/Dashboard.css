@@ -1,0 +1,157 @@
+.main {
+	margin: 0;
+	padding: 0;
+	background: #f9fafb;
+	padding-bottom: 2.5rem;
+	min-height: calc(100vh - 2.5rem);
+}
+
+.dashboard {
+	margin: auto;
+	max-width: 1400px;
+}
+
+h1 {
+	font-size: 24px;
+	margin: 0;
+}
+
+h2 {
+	font-size: 30px;
+	margin: 0;
+}
+
+.dashboard p {
+	margin: 0;
+	font-size: 14px;
+	color: #647488;
+}
+
+input {
+	width: 100%;
+	padding: 13px 12px;
+	border-radius: 10px;
+	border: 1px solid rgb(206, 206, 206);
+	margin-top: 20px;
+}
+
+.main header {
+	margin-bottom: 40px;
+}
+
+button {
+	cursor: pointer;
+}
+
+.nav-container {
+	background-color: white;
+	border-bottom-width: 1px;
+	border-bottom: 1px solid rgb(206, 206, 206);
+	padding: 20px;
+}
+
+.nav-buttons {
+	display: flex;
+}
+
+.nav-content {
+	max-width: 1400px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin: auto;
+}
+
+.follow-block {
+	display: flex;
+	justify-content: space-between;
+}
+
+.navBtn {
+	background-color: white;
+	border-radius: 50%;
+	padding: 5px;
+	margin-right: 10px;
+	border: 1px solid #d6dbe0;
+}
+
+.navBtn:hover {
+	background-color: rgb(177, 177, 177);
+}
+
+.follow-container {
+	width: 900px;
+	height: 350px;
+	background-color: white;
+	border-radius: 10px;
+	border: 1px solid #d6dbe0;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	padding: 24px;
+	text-align: left;
+}
+
+.follow-input-block {
+	margin-top: 20px;
+	border-radius: 10px;
+	background-color: white;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	border: 1px solid #d6dbe0;
+	padding: 30px;
+	text-align: left;
+}
+
+.user-stats {
+	width: 450px;
+	max-height: 300px;
+	border-radius: 10px;
+	border: 1px solid #d6dbe0;
+	background-color: white;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	padding: 24px;
+	text-align: left;
+}
+
+.stats-about {
+	margin-bottom: 20px;
+}
+
+.card-block {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 10px;
+}
+
+.card {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	border: 1px;
+	border-radius: 10px;
+	width: 190px;
+	height: 80px;
+}
+
+.addBtn {
+	background-color: black;
+	color: white;
+	width: 100%;
+	border-radius: 5px;
+	margin-top: 25px;
+	padding: 13px 16px;
+}
+
+.addBtn:hover {
+	background-color: #36393d;
+}
+
+.error-message {
+	color: #e53935;
+	font-size: 14px;
+	margin-top: 8px;
+}
+
+.addBtn:disabled {
+	opacity: 0.7;
+	cursor: not-allowed;
+}

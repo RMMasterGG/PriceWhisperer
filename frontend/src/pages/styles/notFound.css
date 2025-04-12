@@ -1,0 +1,32 @@
+.not-found-container {
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #f3f4f6;
+}
+
+.not-found-content {
+	text-align: center;
+}
+
+.not-found-title {
+	font-size: 2.25rem; /* 36px */
+	font-weight: bold;
+	margin-bottom: 1rem; /* 16px */
+}
+
+.not-found-message {
+	font-size: 1.25rem; /* 20px */
+	color: #4b5563;
+	margin-bottom: 1rem; /* 16px */
+}
+
+.not-found-link {
+	color: #3b82f6;
+	text-decoration: underline;
+}
+
+.not-found-link:hover {
+	color: #1d4ed8;
+}
