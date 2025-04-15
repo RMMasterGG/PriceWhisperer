@@ -2,38 +2,24 @@ from fastapi import FastAPI, Request, Response, HTTPException, status, Cookie
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.testing.suite.test_reflection import users
+
 from model import UserRegister, UserLogin
-from DataBaseLogic import database, Shop, Product, User
+from DataBaseLogic import database
 from token_service import create_token, verify_token
 from ParsingLogic import AsyncUniversalMarketParser
-from model import UrlRequest
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:8000"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-
 @app.post("/api/register")
-async def register(user: UserRegister, access_token: str = Cookie(None)):
+async def register(user: UserRegister):
     existing_users = await database.get_users()
-    user_id = None
     for existing_user in existing_users:
-        if existing_user.user_token == access_token:
-            user_id = existing_user.user_id
-            break
-
-    if user_id is None:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Not authenticated"
-        )
+        if existing_user.user_email == user.email:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Пользователь с таким email уже существует"
+            )
 
     token = await create_token(user.email)
     user_id = await database.add_user(
@@ -82,6 +68,7 @@ async def login(user: UserLogin, response: Response):
         httponly=True,
         secure=False,
         samesite="lax",
+        domain="localhost"
     )
 
     return {
@@ -92,7 +79,8 @@ async def login(user: UserLogin, response: Response):
 
 
 @app.post("/api/logout")
-async def logout(response: Response, access_token: str = Cookie(None)):
+async def logout(response: Response, request: Request):
+    access_token = request.cookies.get("access_token")
     if not access_token:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -113,7 +101,7 @@ async def logout(response: Response, access_token: str = Cookie(None)):
     response.delete_cookie(
         key="access_token",
         httponly=True,
-        secure=False,
+        secure=False,  # В production должно быть True
         samesite="lax"
     )
 
@@ -123,25 +111,18 @@ async def logout(response: Response, access_token: str = Cookie(None)):
 
 
 @app.post("/api/parsing")
-async def parsing(data: UrlRequest, access_token: str = Cookie(None)):
-    print(access_token)
-    url = data.url
-    if not access_token:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Not authenticated"
-        )
+async def parsing(url: str, request: Request):
+    access_token = request.cookies.get("access_token")
+    user_id = 1
 
     existing_users = await database.get_users()
 
     for existing_user in existing_users:
+        print("")
+        print(existing_user.user_token)
+        print("")
         if existing_user.user_token == access_token:
             user_id = existing_user.user_id
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Not authenticated"
-            )
 
 
 
@@ -195,3 +176,26 @@ async def parsing(data: UrlRequest, access_token: str = Cookie(None)):
         "product_url": url,
         "shop_name": shop_name,
     }
+
+
+@app.get("/api/price_check")
+async def price_check(request: Request):
+    products_data = []
+    access_token = request.cookies.get("access_token")
+    existing_users = await database.get_users()
+    for existing_user in existing_users:
+        if existing_user.user_token == access_token:
+            user_id = existing_user.user_id
+            products = await database.get_products_by_user_id(user_id=user_id)
+            for product in products:
+                products_data.append({
+                    "product_id": product.product_id,
+                    "product_name": product.product_name,
+                    "price": product.product_price,
+                    "img": product.product_img,
+                    "product_src": product.product_src,
+                    "shop_id": product.shop_id,
+                    "user_id": product.user_id
+                })
+
+    return products_data
